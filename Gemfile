@@ -11,6 +11,10 @@ group :development, :test do
   gem 'test-unit', :require => false
 end
 
+group :deployment do 
+  gem 'capistrano', :require => false
+end
+
 module Filemine
   autoload :Server, 'filemine/server'
 end

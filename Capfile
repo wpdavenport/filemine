@@ -1,7 +1,11 @@
+load 'deploy' if respond_to?(:namespace)
+
 $:.unshift(File.expand_path('./lib', ENV['rvm_path']))
 require 'rvm/capistrano'
 set :rvm_ruby_string, 'ruby-1.9.2-p0'
 set :rvm_type,        :user
+
+server 'filemine.infoether.com', :app, :web, :db, :primary => true
 
 set :application,           'filemine'
 set :scm,                   :git
@@ -36,10 +40,7 @@ def bundle_exec(cmd)
 end
 
 after  'deploy:setup',       'deploy:bundler:install'
-
 before 'deploy:symlink',     'deploy:bundler'
-after  'deploy:symlink',     'deploy:web:disable'
-after  'deploy:restart',     'deploy:web:enable'
 
 namespace :deploy do
 
@@ -95,5 +96,19 @@ namespace :deploy do
     end
 
   end
+	
+  desc "Start the application via Passenger light"
+  task :start, :roles => :app, :except => { :no_release => true } do
+    run "passenger start -d --log-file log/server.log --pid-file tmp/server.pid -p 9700 -e production"
+  end
 
+  desc "Stop Passenger light"
+  task :stop, :roles => :app, :except => { :no_release => true } do
+    run "passenger start --pid-file tmp/server.pid -p 9700"
+  end
+
+  desc "Restart the application and prestart Passenger"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
 end

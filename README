@@ -1,0 +1,9 @@
+# Filemine
+
+Filemine is a Sinatra app designed to ingest a directory and store the file's MD5 digest hash as a key and the path as the value using Redis. 
+
+# TODO:
+* Expand to use Redis sets for more information about the file.
+* Rake task for ingesting
+* Possibly: Allow for Master/slave for Redis
+
