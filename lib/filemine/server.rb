@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'bundler'
-require 'redis'
 Bundler.setup
 Bundler.require :default
+require 'redis'
 require 'sinatra/base'
 
 module Filemine

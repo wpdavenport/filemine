@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 gem 'nokogiri'
-gem 'resque'
+gem 'redis'
 
 group :server do
   gem 'sinatra'

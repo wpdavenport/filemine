@@ -17,7 +17,7 @@ set :group,                 'filemine'
 set :use_sudo,              false
 set :shared_children,       %w(log system)
 
-set :cleanup_targets,       %w(config/private log public/system tmp)
+set :cleanup_targets,       %w(config/private log public/system)
 set :release_directories,   %w(log tmp)
 
 set(:shared_symlinks) do
@@ -99,16 +99,17 @@ namespace :deploy do
 	
   desc "Start the application via Passenger light"
   task :start, :roles => :app, :except => { :no_release => true } do
-    run "passenger start -d --log-file log/server.log --pid-file tmp/server.pid -p 9700 -e production"
+   run "thin start -d -l log/server.log -P tmp/server.pid -p 9700 -e production"
   end
 
   desc "Stop Passenger light"
   task :stop, :roles => :app, :except => { :no_release => true } do
-    run "passenger start --pid-file tmp/server.pid -p 9700"
+   run "thin stop -P tmp/server.pid"
   end
 
   desc "Restart the application and prestart Passenger"
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{current_path}/tmp/restart.txt"
+   stop
+   start
   end
 end
